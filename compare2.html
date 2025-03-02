@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Comparison</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            text-align: center;
+        }
+        body.light-theme {
+            background-color: #f4f4f4;
+            color: #121212;
+        }
+        header {
+            padding: 20px;
+            background: linear-gradient(90deg, #0f0c29, #302b63, #24243e);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 2em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00d4ff;
+            margin: 0;
+        }
+        .theme-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .theme-toggle input {
+            display: none;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            background: #00d4ff;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .switch::before {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 1px;
+            left: 2px;
+            transition: 0.3s;
+        }
+        input:checked + .switch {
+            background: #009ac7;
+        }
+        input:checked + .switch::before {
+            transform: translateX(20px);
+        }
+        .comparison-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .product-layout {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
+        .product-card {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 15px rgba(0, 212, 255, 0.5);
+            width: 220px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        body.light-theme .product-card {
+            background: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 20px rgba(0, 212, 255, 1);
+        }
+        .product-card img {
+            width: 100%;
+            height: 130px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .product-card h3 {
+            color: #00d4ff;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+        .buy-button {
+            background: linear-gradient(90deg, #00d4ff, #009ac7);
+            color: #121212;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        .buy-button:hover {
+            background: linear-gradient(90deg, #009ac7, #00d4ff);
+        }
+        .recommendation {
+            padding: 10px;
+            background: #00d4ff;
+            color: #121212;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 12px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+        canvas {
+            max-width: 400px;
+            height: 250px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Product Comparison</h1>
+        <label class="theme-toggle">
+            <input type="checkbox" onclick="toggleTheme()">
+            <span class="switch"></span>
+        </label>
+    </header>
+    <main class="comparison-container">
+        <canvas id="priceChart"></canvas>
+        <div class="recommendation">Best Price Available On: <span id="bestPlatform">Flipkart</span></div>
+        <div class="product-layout">
+            <div class="product-card" id="amazon-card">
+                <img src="notebook-g16-7630-nt-white-gallery-1.avif" alt="Product">
+                <h3>Amazon</h3>
+                <div class="price-box">Price: 95000</div>
+                <a href="https://www.amazon" class="buy-button" target="_blank">Buy on Amazon</a>
+            </div>
+            <div class="product-card" id="flipkart-card">
+                <img src="notebook-g16-7630-nt-white-gallery-1.avif" alt="Product">
+                <h3>Flipkart</h3>
+                <div class="price-box">Price: 90000</div>
+                <a href="https://www.flipkart.com" class="buy-button" target="_blank">Buy on Flipkart</a>
+            </div>
+            <div class="product-card" id="meesho-card">
+                <img src="notebook-g16-7630-nt-white-gallery-1.avif" alt="Product">
+                <h3>Meesho</h3>
+                <div class="price-box">Price: 100000</div>
+                <a href="https://www.meesho.com" class="buy-button" target="_blank">Buy on Meesho</a>
+            </div>
+        </div>
+    </main>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+        }
+
+        // Price Comparison Chart
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const priceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Amazon', 'Flipkart', 'Meesho'],
+                datasets: [{
+                    label: 'Price in INR',
+                    data: [95000,90000,100000],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#ffffff'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                animations: {
+                    tension: {
+                        duration: 1000,
+                        easing: 'easeInOutBounce',
+                        from: 1,
+                        to: 0,
+                        loop: true
+                    }
+                }
+            }
+        });
+
+        document.querySelector('.theme-toggle input').addEventListener('change', function() {
+            const isChecked = this.checked;
+            const chartLegend = priceChart.options.plugins.legend.labels.color;
+            const yAxisTicks = priceChart.options.scales.y.ticks.color;
+            const xAxisTicks = priceChart.options.scales.x.ticks.color;
+
+            if (isChecked) {
+                chartLegend.color = '#121212';
+                yAxisTicks.color = '#121212';
+                xAxisTicks.color = '#121212';
+            } else {
+                chartLegend.color = '#ffffff';
+                yAxisTicks.color = '#ffffff';
+                xAxisTicks.color = '#ffffff';
+            }
+            priceChart.update();
+        });
+    </script>
+</body>
+</html>

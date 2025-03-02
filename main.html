@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Price Comparison</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            text-align: center;
+        }
+        body.light-theme {
+            background-color: #f4f4f4;
+            color: #121212;
+        }
+        header {
+            padding: 20px;
+            background: linear-gradient(90deg, #0f0c29, #302b63, #24243e);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00d4ff;
+            margin: 0;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 3.5px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #00d4ff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        #searchBar {
+            width: 80%;
+            max-width: 500px;
+            padding: 12px;
+            margin: 20px auto;
+            display: block;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            background: #1e1e1e;
+            color: #00d4ff;
+            text-align: center;
+            outline: none;
+            box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);
+        }
+        body.light-theme #searchBar {
+            background: #ffffff;
+            color: #121212;
+        }
+        #productList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .product-card {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0px 0px 8px rgba(0, 212, 255, 0.3);
+            cursor: pointer;
+            text-decoration: none;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        body.light-theme .product-card {
+            background: #ffffff;
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+        }
+        .product-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 0px 15px rgba(0, 212, 255, 1);
+        }
+        .product-card img {
+            width: 100%;
+            max-width: 180px;
+            height: 180px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .product-card h3 {
+            margin: 10px 0 0 0;
+            color: #38d0ee;
+            font-size: 1em;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            #productList {
+                flex-direction: column;
+                align-items: center;
+            }
+            .product-card {
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Product Price Comparison</h1>
+        <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+        </label>
+    </header>
+    <input type="text" id="searchBar" placeholder="Search for a product..." onkeyup="searchProducts()">
+    <main id="productList">
+        <a href="compare.html" class="product-card" data-name="I PHONE 16 pro">
+            <img src="iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_2__en-IN.webp" alt="Product 1">
+            <h3>I PHONE 16 pro</h3>
+        </a>
+        <a href="compare1.html" class="product-card" data-name="A168WA-1 | CASIO INDIA">
+            <img src="D181.webp" alt="Product 2">
+            <h3>A168WA-1 | CASIO INDIA</h3>
+        </a>
+        <a href="compare2.html" class="product-card" data-name="Dell G16 Gaming Laptop">
+            <img src="DELL-G16-7630-Intel-Core-i9-13th-Gen-3.jpg" alt="Product 3">
+            <h3>Dell G16 Gaming Laptop</h3>
+        </a>
+        <a href="" class="product-card" data-name="SAMSUNG Monitor">
+            <img src="lc24f392fhwxxl-1-550x550.jpg" alt="Product 3">
+            <h3>SAMSUNG Monitor </h3>
+        </a>
+        <a href="" class="product-card" data-name=">Noise Aura Buds ">
+            <img src="619gDUPcbNL.jpg" alt="Product 3">
+            <h3>Noise Aura Buds </h3>
+        </a>
+        <a href="" class="product-card" data-name="pTron Soundster">
+            <img src="01_7ee9bca0-b18f-473c-9e3c-3eb4be5468e5.webp" alt="Product 3">
+            <h3>pTron Soundster </h3>
+        </a>
+        <a href="" class="product-card" data-name="HP Smart Tank ">
+            <img src="61LJaZbz3cL.jpg" alt="Product 3">
+            <h3>HP Smart Tank </h3>
+        </a>
+        <a href="" class="product-card" data-name=" Galaxy Tab S8">
+            <img src="GalaxyTab_S8Ultra_AllColorKV_WithSPen_MO.webp" alt="Product 3">
+            <h3> Galaxy Tab S8</h3>
+        </a>
+        <a href="" class="product-card" data-name="RGB Stereo Gaming Speakers">
+            <img src="RGB-Stereo-Gaming-Speakers-X2-USB-3-5mm-2x3W-Black-17062021-01-p.webp" alt="Product 3">
+            <h3>RGB Stereo Gaming Speakers</h3>
+        </a>
+        <a href="" class="product-card" data-name="Wireless Speakers">
+            <img src="hero-creative-t15-wireless.jpg" alt="Product 3">
+            <h3>Wireless Speakers</h3>
+        </a>
+        <a href="" class="product-card" data-name="Dell G16 Gaming Laptop">
+            <img src="notebook-g16-7630-nt-white-gallery-1.avif" alt="Product 3">
+            <h3>Dell G16 Gaming Laptop</h3>
+        </a>
+        <a href="compare2.html" class="product-card" data-name="Dell G16 Gaming Laptop">
+            <img src="notebook-g16-7630-nt-white-gallery-1.avif" alt="Product 3">
+            <h3>Dell G16 Gaming Laptop</h3>
+        </a>
+    </main>
+    <script>
+        const themeToggle = document.getElementById("themeToggle");
+        themeToggle.addEventListener("change", () => {
+            document.body.classList.toggle("light-theme");
+        });
+
+        function searchProducts() {
+            let input = document.getElementById("searchBar").value.toLowerCase();
+            let products = document.querySelectorAll(".product-card");
+            products.forEach(product => {
+                let name = product.getAttribute("data-name").toLowerCase(); // Convert to lowercase
+                if (name.includes(input)) {
+                    product.style.display = "block";
+                } else {
+                    product.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
